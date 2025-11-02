@@ -1,0 +1,178 @@
+## ============================================
+## SECTION 1: BASIC INFORMATION
+## ============================================
+
+protocol_number: "01"
+protocol_name: "project-brief-creation"
+domain_compliance: "Project-Scoping"
+purpose: "Validate all discovery artifacts and generate a comprehensive, client-approved Project Brief that serves as the authoritative foundation for all subsequent project phases."
+
+## ============================================
+## SECTION 2: AI ROLE & CONTEXT
+## ============================================
+
+ai_role: "Freelance Solutions Architect"
+primary_guardrail: "DO NOT generate or approve a project brief until all discovery artifacts are validated and client confirmation is received."
+
+prerequisites:
+  - protocol: "02-client-discovery-initiation"
+    required_artifacts: "client-discovery-form.md, scope-clarification.md, communication-plan.md, client-context-notes.md, timeline-discussion.md"
+  - protocol: "01-client-proposal-generation"
+    required_artifacts: "PROPOSAL.md, jobpost-analysis.json"
+
+phase_in_workflow: "Immediately after Protocol 02 (Client Discovery Initiation) and before Protocol 02 (Architecture Planning)"
+
+## ============================================
+## SECTION 3: EXECUTION STRUCTURE
+## ============================================
+
+phases:
+  - phase_number: 1
+    phase_name: "Input Validation and Consistency Check"
+    objective: "Verify completeness and consistency of all discovery and proposal artifacts before assembly."
+    steps:
+      - step_number: 1
+        action_type: "MUST"
+        action_title: "Validate Discovery Artifacts"
+        instructions: "Ensure all discovery files exist, are non-empty, and contain confirmed client data. Reject incomplete or pending responses."
+        communication_template: "[PHASE 1 START] - Validating discovery artifacts..."
+        halt_condition: "Stop if any required artifact is missing or incomplete."
+      - step_number: 2
+        action_type: "MUST"
+        action_title: "Cross-Validate Scope and Proposal"
+        instructions: "Compare scope-clarification.md and PROPOSAL.md to ensure all approved features and constraints match client expectations."
+        communication_template: "Cross-validating discovery scope with proposal context..."
+    evidence_collection:
+      - evidence_item: "project-brief-validation-report.json"
+        storage_location: ".artifacts/briefs/project-brief-validation-report.json"
+    quality_gate:
+      gate_name: "Discovery Validation Gate"
+      criteria: "All discovery files validated and cross-checked with proposal context."
+      failure_handling: "Suspend protocol and request missing or inconsistent data from discovery phase."
+
+  - phase_number: 2
+    phase_name: "Project Brief Assembly"
+    objective: "Integrate validated artifacts into a unified, structured Project Brief document."
+    steps:
+      - step_number: 1
+        action_type: "MUST"
+        action_title: "Assemble Project Brief Sections"
+        instructions: "Merge validated content from discovery and proposal artifacts into a comprehensive markdown file with standardized structure."
+        communication_template: "[PHASE 2 START] - Assembling Project Brief..."
+      - step_number: 2
+        action_type: "GUIDELINE"
+        action_title: "Generate Risk and Constraint Summary"
+        instructions: "Document any constraints or gaps identified during validation as a risk appendix in the brief."
+    evidence_collection:
+      - evidence_item: "PROJECT-BRIEF.md"
+        storage_location: ".artifacts/briefs/PROJECT-BRIEF.md"
+    quality_gate:
+      gate_name: "Brief Structure Integrity Gate"
+      criteria: "All core sections present: business objectives, functional scope, technical specs, timeline, communication plan."
+      failure_handling: "Rebuild brief with missing sections before proceeding to review."
+
+  - phase_number: 3
+    phase_name: "Review and Approval Validation"
+    objective: "Confirm automated checks and secure client approval before protocol completion."
+    steps:
+      - step_number: 1
+        action_type: "MUST"
+        action_title: "Run Automated Validation"
+        instructions: "Validate structure, links, and section completeness in PROJECT-BRIEF.md."
+        communication_template: "[PHASE 3 START] - Running automated brief validation..."
+      - step_number: 2
+        action_type: "MUST"
+        action_title: "Client Approval Confirmation"
+        instructions: "Send summarized brief to client for confirmation; await approval log before completion."
+        communication_template: "Awaiting client approval for final Project Brief..."
+        halt_condition: "Stop until client confirmation is received."
+    evidence_collection:
+      - evidence_item: "BRIEF-APPROVAL-RECORD.json"
+        storage_location: ".artifacts/briefs/BRIEF-APPROVAL-RECORD.json"
+    quality_gate:
+      gate_name: "Approval Validation Gate"
+      criteria: "Automated checks passed and client approval recorded."
+      failure_handling: "Hold protocol until validation passes and client confirms acceptance."
+
+## ============================================
+## SECTION 4: INTEGRATION & DATA FLOW
+## ============================================
+
+inputs_from:
+  - protocol: "02-client-discovery-initiation"
+    artifacts_consumed: "client-discovery-form.md, scope-clarification.md, communication-plan.md, client-context-notes.md, timeline-discussion.md"
+    usage: "Provides validated discovery data for brief creation."
+  - protocol: "01-client-proposal-generation"
+    artifacts_consumed: "PROPOSAL.md, jobpost-analysis.json"
+    usage: "Provides baseline proposal and job post intent for reference alignment."
+
+outputs_to:
+  - protocol: "00-project-bootstrap-and-context-engineering"
+    artifacts_provided: "PROJECT-BRIEF.md, project-brief-validation-report.json, BRIEF-APPROVAL-RECORD.json"
+    purpose: "Provides finalized project scope, technical direction, and business alignment for governed project scaffold generation."
+
+## ============================================
+## SECTION 5: AUTOMATION & TOOLING
+## ============================================
+
+automation_hooks:
+  - hook_name: "validate_discovery_inputs.py"
+    trigger_point: "Phase 1 start"
+    command: "python scripts/validate_discovery_inputs.py --input .artifacts/discovery/"
+    expected_output: "project-brief-validation-report.json"
+  - hook_name: "assemble_project_brief.py"
+    trigger_point: "Phase 2 execution"
+    command: "python scripts/assemble_project_brief.py --output .artifacts/briefs/PROJECT-BRIEF.md"
+    expected_output: "PROJECT-BRIEF.md"
+  - hook_name: "validate_brief_structure.py"
+    trigger_point: "Phase 3 start"
+    command: "python scripts/validate_brief_structure.py --input .artifacts/briefs/PROJECT-BRIEF.md"
+    expected_output: "project-brief-validation-report.json"
+
+## ============================================
+## SECTION 6: COMMUNICATION PROTOCOLS
+## ============================================
+
+announcements:
+  phase_start_template: "[PHASE {N} START] - Beginning {phase_name}..."
+  phase_complete_template: "[PHASE {N} COMPLETE] - {phase_name} completed successfully."
+  automation_status_template: "[STATUS] {phase_name} validation and output generated."
+
+validation_prompts:
+  - prompt_context: "After Phase 3 completion"
+    prompt_template: "[VALIDATION] Project Brief validated and approved. Proceed to Bootstrap? (yes/no)"
+
+error_handling:
+  - error_type: "MissingArtifacts"
+    error_message_template: "[ERROR] One or more required discovery artifacts not found."
+    recovery_steps: "Re-run Protocol 02 or manually upload missing files."
+  - error_type: "ValidationFailure"
+    error_message_template: "[ERROR] Validation checks failed for assembled brief."
+    recovery_steps: "Review project-brief-validation-report.json and correct discrepancies."
+  - error_type: "ClientApprovalPending"
+    error_message_template: "[ERROR] Client has not yet approved Project Brief."
+    recovery_steps: "Follow up with client and record confirmation in BRIEF-APPROVAL-RECORD.json."
+
+## ============================================
+## SECTION 7: COMPLETION & HANDOFF
+## ============================================
+
+completion_checklist:
+  - "All discovery artifacts validated successfully."
+  - "PROJECT-BRIEF.md generated and passes integrity checks."
+  - "Validation report and client approval recorded."
+  - "Brief artifacts stored under .artifacts/briefs/."
+
+handoff_command: "[PROTOCOL COMPLETE] - Project Brief validated and approved. Ready for Protocol 00 (Bootstrap)."
+next_protocol: "00-project-bootstrap-and-context-engineering"
+
+## ============================================
+## SECTION 8: ADDITIONAL CONTEXT (OPTIONAL)
+## ============================================
+
+context: "This protocol consolidates all validated discovery outputs into a single client-approved Project Brief. It ensures business, technical, and communication alignments are captured before any development or bootstrap operations begin."
+focus_areas:
+  - "Validation of discovery data"
+  - "Brief assembly and evidence generation"
+  - "Client approval and readiness for bootstrap phase"
+special_considerations: "Ensure PROJECT-BRIEF.md includes YAML frontmatter defining stack configuration, industry, and compliance requirements to support automated scaffold generation."

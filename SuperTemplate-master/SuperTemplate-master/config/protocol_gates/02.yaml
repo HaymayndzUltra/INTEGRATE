@@ -1,0 +1,88 @@
+# Protocol 02: Client Discovery Initiation - Gate Configuration
+# This file defines automated validation gates for Protocol 02 (02)
+
+protocol_id: "02"
+protocol_title: "Client Discovery Initiation"
+notes: |
+  Solo developer discovery workflow automation.
+  Gates aligned to pre-call readiness, post-call capture, recap approval, and Protocol 03 handoff.
+
+validators:
+  - name: "gate_0_pre_call_readiness"
+    command: "python3 scripts/validate_gate_02_pre_call.py"
+    description: "Confirms pre-call artifacts complete and outstanding items tagged"
+    prerequisite: true
+
+  - name: "gate_1_data_capture"
+    command: "python3 scripts/validate_gate_02_data_capture.py"
+    description: "Validates post-call updates across discovery form, scope, timeline, and comms"
+    prerequisite: false
+
+  - name: "gate_2_recap_approval"
+    command: "python3 scripts/validate_gate_02_recap.py"
+    description: "Checks recap delivery, approval log, and outstanding follow-ups"
+    prerequisite: false
+
+  - name: "gate_3_handoff_ready"
+    command: "python3 scripts/validate_gate_02_handoff.py"
+    description: "Verifies Protocol 03 prerequisites satisfied and blockers cleared"
+    prerequisite: false
+
+artifacts:
+  - path: ".artifacts/protocol-02/discovery-brief.md"
+    description: "Pre-call summary of business goals and constraints"
+    status: "required"
+
+  - path: ".artifacts/protocol-02/assumptions-gaps.md"
+    description: "Tracker of outstanding questions and assumptions"
+    status: "required"
+
+  - path: ".artifacts/protocol-02/question-bank.md"
+    description: "Prioritized discovery question set"
+    status: "required"
+
+  - path: ".artifacts/protocol-02/integration-inventory.md"
+    description: "System and dependency inventory"
+    status: "required"
+
+  - path: ".artifacts/protocol-02/call-agenda.md"
+    description: "Discovery call structure and checklist"
+    status: "required"
+
+  - path: ".artifacts/protocol-02/ready-for-call-summary.md"
+    description: "Pre-call readiness confirmation"
+    status: "required"
+
+  - path: ".artifacts/protocol-02/client-discovery-form.md"
+    description: "Confirmed functional requirements"
+    status: "required"
+
+  - path: ".artifacts/protocol-02/scope-clarification.md"
+    description: "Updated technical scope and constraints"
+    status: "required"
+
+  - path: ".artifacts/protocol-02/timeline-discussion.md"
+    description: "Milestones and scheduling commitments"
+    status: "required"
+
+  - path: ".artifacts/protocol-02/communication-plan.md"
+    description: "Collaboration cadence and escalation plan"
+    status: "required"
+
+  - path: ".artifacts/protocol-02/discovery-recap.md"
+    description: "Client-facing recap of discovery outcomes"
+    status: "required"
+
+  - path: ".artifacts/protocol-02/discovery-approval-log.json"
+    description: "Approval log for recap delivery"
+    status: "required"
+
+  - path: ".artifacts/protocol-02/transcripts/"
+    description: "Call transcripts and recording references"
+    status: "recommended"
+
+quality_thresholds:
+  readiness_score: 1.0
+  data_capture_score: 0.95
+  recap_status: "approved"
+  handoff_ready: true

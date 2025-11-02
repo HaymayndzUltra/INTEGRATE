@@ -1,0 +1,60 @@
+# Meta-Instruction Prompt Upgrade Guide
+
+## 1. Role & Objective
+- **Role:** World-class meta prompt engineer focused on clarity, determinism, and factual accuracy.
+- **Objective:** Refine meta-instruction analyses so they follow category-driven templates, emit explicit actions, and minimize hallucination risk.
+
+## 2. Required Inputs
+- `.cursor/ai-driven-workflow/01-client-proposal-generation.md` (source protocol).
+- Current analysis: `meta-analysis/protocols/analysis-01-client-proposal-generation.md`.
+- Format catalog: files under `meta-analysis/examples/` (EXECUTION, GUIDELINES, PROMPT, META, ISSUE).
+- Validator context: `validators-system/README.md` plus supporting docs.
+
+## 3. Mandatory Preparation
+1. Read the current analysis to understand baseline reasoning (do not copy it verbatim).
+2. Review `meta-analysis/examples/README.md` to map protocol sections to the correct category/variant.
+3. Skim `validators-system/` quick start so automation hooks remain compatible with validator expectations.
+
+## 4. Transformation Protocol
+
+### 4.1 Phase Map Refactor
+For each step inside every layer:
+1. **Classify** the section type (e.g., `EXECUTION-FORMATS.md → REASONING`).
+2. **Rewrite** the entry using the template below, converting prose into directive actions.
+3. **Bind Evidence** by citing line ranges and describing required artifacts/logs (avoid inventing files).
+4. **State Meta-Heuristic** as an abstract principle tied to the action.
+
+#### Step Entry Template
+```
+**Step N:** <Title> (ref. L<start>-L<end>)
+- [Category: <CATEGORY FILE> → <VARIANT>]
+- **`[MUST]` Action:** <Deterministic instruction>
+- **Evidence:** <Artifacts/logs + precise line references>
+- **Meta-heuristic:** <Abstract principle>
+```
+
+### 4.2 Additional Sections
+- **Meta-Architecture Diagram:** Keep subsystem titles aligned with updated step names.
+- **Commentary:** Reference the new action artifacts (e.g., gate registers, communication matrices).
+- **Inference Summary:** Emphasize automation alignment and validator readiness.
+- **Output Instructions:** Retain the four bullet items; adjust wording only for clarity.
+
+## 5. Output Requirements
+- Deliver the rewritten Phase Map plus any necessary commentary tweaks.
+- Provide a concise change log summarizing structural upgrades and category selections.
+- Keep headings identical to the generator specification; no new sections.
+
+## 6. Quality Gate (Self-Check)
+- [ ] Every Phase Map item includes category tag, `[MUST]` action, evidence line, and meta-heuristic.
+- [ ] Categories match guidance from `meta-analysis/examples/README.md`.
+- [ ] Evidence citations map to real lines in the source protocol.
+- [ ] Automation language is compatible with `validators-system` expectations.
+- [ ] Change summary clearly differentiates new directives from the original narrative.
+
+## 7. Deliverables
+1. Rewritten Phase Map in `meta-analysis/protocols/analysis-01-client-proposal-generation.md`.
+2. Change summary describing improvements and residual risks.
+3. Next-step recommendation (e.g., which validator to run or review to request).
+
+## 8. Reference (Baseline Excerpt)
+Use the current contents of `meta-analysis/protocols/analysis-01-client-proposal-generation.md` as input context only. Load that file directly when performing the refactor instead of relying on cached text.

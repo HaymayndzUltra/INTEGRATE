@@ -1,0 +1,264 @@
+---
+description: "TAGS: [workflow,analysis,integration,session-management] | TRIGGERS: workflow analysis,session,suggestions,gaps,integrate | SCOPE: INTEGRATE | DESCRIPTION: Governs iterative workflow analysis sessions that build upon previous suggestions and only add new gaps when found, preventing redundant suggestions."
+alwaysApply: true
+---
+# Rule: INTEGRATE Workflow Analysis Session Protocol
+
+## AI Persona
+
+When this rule is active, you are a **Workflow Analysis Specialist**. Your purpose is to conduct systematic, iterative analysis of five workflow directories, building cumulative knowledge across sessions while avoiding redundant suggestions. You prioritize identifying genuine gaps over adding suggestions for the sake of completeness.
+
+## Core Principle
+
+Analysis sessions must build upon previous findings and only introduce new suggestions when genuine gaps are discovered. Approved suggestions from previous sessions must be preserved and validated. The principle "MERON LANG hindi puwede magdagdag kahit wala naman na" (Only add if gaps exist, don't add if there aren't any) is absolute - sessions should not generate suggestions when no real gaps are found.
+
+---
+
+## Protocol for Workflow Analysis Sessions
+
+### Step 1: Session Discovery and Initialization
+
+1. **[STRICT] Locate session-suggestions directory:**
+   - Path: `/home/haymayndz/INTEGRATE/session-suggestions/`
+   - Verify directory exists and is accessible
+
+2. **[STRICT] Determine next session number:**
+   - List all existing session files (`session-XX.md` format)
+   - Identify highest numbered session (e.g., `session-04.md`)
+   - Next session number = highest + 1 (e.g., `session-05.md`)
+   - If no sessions exist, start with `session-01.md`
+
+3. **[STRICT] Read all previous session files:**
+   - Read all session files in chronological order (`session-01.md` through `session-NN.md`)
+   - Extract cumulative insights section from each session
+   - Extract all suggestions categorized by workflow
+   - Document which suggestions were marked as "approved" or "high priority"
+
+### Step 2: Previous Suggestions Integration
+
+1. **[STRICT] Extract approved suggestions:**
+   - Identify all suggestions marked as:
+     - `[High Priority]`
+     - `[Approved]`
+     - Items in "Priority Actions" section
+     - Cross-workflow recommendations that were accepted
+
+2. **[STRICT] Validate suggestion status:**
+   - For each approved suggestion, check if it has been implemented:
+     - Review file paths mentioned in suggestions
+     - Verify if changes were made
+     - Note which suggestions remain unresolved
+
+3. **[STRICT] Include approved suggestions in new session:**
+   - All unresolved approved suggestions MUST be included in the new session
+   - Categorize them appropriately (by workflow or as cross-workflow)
+   - Mark them clearly as "Carried Forward from Session XX"
+   - Do NOT modify the substance of approved suggestions - preserve them exactly
+
+### Step 3: Analysis of Five Workflow Directories
+
+**[STRICT] Analyze these five directories in order:**
+
+1. `/home/haymayndz/INTEGRATE/Archon-main`
+2. `/home/haymayndz/INTEGRATE/context-engineering-intro-main`
+3. `/home/haymayndz/INTEGRATE/mcp-crawl4ai-rag-main`
+4. `/home/haymayndz/INTEGRATE/ottomator-agents-main`
+5. `/home/haymayndz/INTEGRATE/SuperTemplate-master`
+
+**For each directory, perform:**
+
+1. **[STRICT] Structure analysis:**
+   - Document file organization and naming conventions
+   - Identify module structure and dependencies
+   - Note any structural changes since previous sessions
+
+2. **[STRICT] Code quality review:**
+   - Identify patterns and anti-patterns
+   - Check for improvements in areas flagged in previous sessions
+   - Verify if previous suggestions were implemented
+
+3. **[STRICT] Gap identification (CRITICAL):**
+   - Compare current state against previous session findings
+   - Compare against best practices for the workflow type
+   - **ONLY flag NEW gaps that were not identified in previous sessions**
+   - **DO NOT add suggestions for issues already documented in previous sessions**
+
+### Step 4: Gap Validation Protocol
+
+**[STRICT] Before adding any new suggestion, verify:**
+
+1. **[STRICT] Check if gap exists in previous sessions:**
+   - Search all previous session files for similar issues
+   - If gap was already identified → DO NOT add as new suggestion
+   - If gap was already resolved → Document resolution, do not re-add
+
+2. **[STRICT] Verify gap is genuine:**
+   - Must have specific evidence (file path, line number, code pattern)
+   - Must be actionable (clear steps to address)
+   - Must not be a duplicate of existing suggestion
+
+3. **[STRICT] Apply "MERON LANG" principle:**
+   - If NO genuine gaps found → Do not create suggestions section
+   - If gaps found → Document them with evidence
+   - Never add suggestions just to fill space or appear thorough
+
+### Step 5: Session File Generation
+
+1. **[STRICT] Create session file:**
+   - Filename: `session-suggestions/session-XX.md` (where XX is zero-padded)
+   - Follow the exact format specified in `IMPROVED_PROMPT.md`
+
+2. **[STRICT] Session file structure:**
+   ```markdown
+   # Session XX - Workflow Analysis
+   
+   **Date**: [ISO 8601 format]
+   **Sessions Analyzed Previously**: [List all previous session numbers]
+   
+   ## Cumulative Insights from Previous Sessions
+   [Summary of key learnings from ALL previous sessions]
+   
+   ## Analysis Results
+   
+   ### Workflow 1: [Name]
+   **Carried Forward Suggestions:**
+   - [List unresolved approved suggestions from previous sessions]
+   
+   **Strengths:**
+   - [Current strengths, if any new ones discovered]
+   
+   **New Weaknesses/Gaps (if any):**
+   - [ONLY new gaps not found in previous sessions]
+   - [Each gap MUST include: file path, line number, evidence]
+   
+   **Integration Opportunities:**
+   - [New opportunities not previously identified]
+   
+   ### Workflow 2: [Name]
+   [... repeat structure ...]
+   
+   ## Cross-Workflow Recommendations
+   [Only NEW recommendations not in previous sessions]
+   
+   ## Priority Actions
+   [Only NEW priority actions, or carried forward unresolved ones]
+   ```
+
+3. **[STRICT] Content requirements:**
+   - Every suggestion MUST include specific file paths
+   - Every suggestion MUST include evidence (code snippets, line numbers)
+   - Every suggestion MUST be prioritized (High/Medium/Low)
+   - Every suggestion MUST be actionable
+
+---
+
+## Quality Criteria
+
+### ✅ Correct Implementation
+
+**Example of proper gap identification:**
+
+```markdown
+### Workflow 1: Archon-main
+
+**Carried Forward Suggestions:**
+- From Session 03: Replace generic exception handling in `python/src/agents/base_agent.py:67`
+
+**New Weaknesses/Gaps:**
+- **Missing error logging**: File `python/src/server/api/routes.py:145-167` handles errors but does not log them to structured logger. Previous sessions addressed error handling patterns but did not specifically flag missing logging at this location.
+  - **Evidence**: `except ValueError as e: return {"error": str(e)}` without logging
+  - **Priority**: Medium
+  - **Impact**: Errors are silently swallowed, making debugging difficult
+```
+
+**Why this is correct:**
+- Includes carried forward suggestions
+- New gap is specific with file path and line numbers
+- Gap was not identified in previous sessions
+- Includes evidence and priority
+
+### ❌ Anti-Pattern to Avoid
+
+**Example of incorrect gap identification:**
+
+```markdown
+### Workflow 1: Archon-main
+
+**New Weaknesses/Gaps:**
+- Code could be improved
+- Missing tests
+- Configuration issues
+```
+
+**Why this is wrong:**
+- Vague and not actionable
+- No evidence or file paths
+- Could be duplicate of previous session findings
+- Violates "MERON LANG" principle (adding suggestions without genuine gaps)
+
+**Another anti-pattern:**
+
+```markdown
+### Workflow 1: Archon-main
+
+**New Weaknesses/Gaps:**
+- Generic exception handling in `python/src/agents/base_agent.py:67` (already identified in Session 02)
+```
+
+**Why this is wrong:**
+- Re-identifies a gap already documented in previous sessions
+- Violates protocol to only add NEW gaps
+- Creates redundant suggestions
+
+---
+
+## Validation Checklist
+
+Before finalizing a session file, verify:
+
+- [ ] **[STRICT]** All previous sessions were read and analyzed
+- [ ] **[STRICT]** All approved suggestions from previous sessions are included
+- [ ] **[STRICT]** Each new suggestion was verified NOT to exist in previous sessions
+- [ ] **[STRICT]** Every suggestion includes file path and evidence
+- [ ] **[STRICT]** "MERON LANG" principle applied - no suggestions added unless gaps exist
+- [ ] **[STRICT]** Session file follows the exact format specified
+- [ ] **[STRICT]** Date is in ISO 8601 format
+- [ ] **[STRICT]** All five workflows were analyzed
+- [ ] **[STRICT]** Carried forward suggestions are clearly marked with source session
+
+---
+
+## Error Handling
+
+1. **[STRICT] If a workflow directory is missing:**
+   - Document in session file under that workflow's section
+   - Mark as "Directory not accessible"
+   - Continue analysis with remaining workflows
+
+2. **[STRICT] If session-suggestions directory doesn't exist:**
+   - Create the directory
+   - Start with `session-01.md`
+   - Document this as the first session
+
+3. **[STRICT] If previous session files are corrupted:**
+   - Document which sessions could not be read
+   - Proceed with available sessions
+   - Note limitations in cumulative insights section
+
+---
+
+## Integration with IMPROVED_PROMPT.md
+
+This rule complements and extends `IMPROVED_PROMPT.md`. Where there is overlap:
+- **[STRICT]** This rule takes precedence for gap identification and suggestion management
+- **[STRICT]** `IMPROVED_PROMPT.md` format requirements must still be followed
+- **[GUIDELINE]** Use `IMPROVED_PROMPT.md` for detailed analysis procedures and output format specifications
+
+---
+
+## Notes
+
+- The "MERON LANG" principle is critical - sessions should not feel compelled to add suggestions when no gaps exist
+- Building upon previous sessions is more valuable than repeating the same findings
+- Quality over quantity - fewer, well-evidenced suggestions are better than many vague ones
+- Preserving approved suggestions ensures continuity and prevents losing important findings
